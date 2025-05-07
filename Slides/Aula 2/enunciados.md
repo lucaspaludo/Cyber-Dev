@@ -1,5 +1,5 @@
 
-# 🕹️ Exercícios de Python: Jogos e Operadores Aritméticos
+# 🕹️ Exercícios de Python: Tipos primitivos e Operadores Aritméticos
 
 ## 1. Calculadora do Guerreiro
 Um guerreiro ganha pontos de força (FOR), agilidade (AGI) e inteligência (INT) ao subir de nível.  
