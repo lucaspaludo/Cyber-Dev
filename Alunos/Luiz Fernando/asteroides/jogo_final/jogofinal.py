@@ -14,7 +14,7 @@ TAM_MAXIMO = 90
 VEL_MINIMA = 1
 VEL_MAXIMA = 8
 VEL_JOGADOR = 5
-VEL_MINIMA = (0, -20)
+VEL_RAIO = (0, -20)
 ITERACOES = 20
 
 
@@ -23,11 +23,24 @@ ALTURA_NAVE = imagemNave.get_height()
 LARGURA_RAIO = imagemRaio.get_width()
 ALTURA_RAIO = imagemRaio.get_height()
 
-def moverJogador():
-    pass
+def moverJogador(jogador, teclas, dim_janela):
+    borda_esquerda = 0
+    borda_superior = 0
+    borda_direita = dim_janela[0]
+    borda_inferior = dim_janela[1]
+    if teclas['esquerda'] and jogador['objRect'].left > borda_esquerda:
+        jogador['objRect'].x -= jogador['vel']
+    if teclas['direita'] and jogador['objRect'].right < borda_direita:
+        jogador['objRect'].x += jogador['vel']
+    if teclas['cima'] and jogador['objRect'].top > borda_superior:
+        jogador['objRect'].y -= jogador['vel']
+    if teclas['baixo'] and jogador['objRect'].bottom < borda_inferior:
+        jogador['objRect'].y += jogador['vel']
 
-def moverElementos():
-    pass
+
+def moverElemento(elemento):
+    elemento['objRect'].x += elemento['vel'][0]
+    elemento['objRect'].y += elemento['vel'][0]
 
 def terminar():
     pygame.quit()
@@ -100,6 +113,53 @@ while True:
         pontuacao +- 1
         if pontuacao == recorde:
             somRecord.play() 
+        for evento in pygame.event.get():
+            if evento.type  == pygame.QUIT:
+                terminar()
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:
+                    deve_continuar = False
+                if evento.Key == pygame.K_LEFT or evento.Key == pygame.K_a:
+                    teclas['escape'] = True
+                if evento.Key == pygame.K_RIGHT or evento.Key == pygame.K_d:
+                    teclas['direita'] = True
+                if evento.Key == pygame.K_UP or evento.Key == pygame.K_w:
+                    teclas['cima'] = True
+                if evento.Key == pygame.K_DOWN or evento.Key == pygame.K_s:
+                    teclas['baixo'] = True
+                if evento.Key == pygame.K_SPACE:
+                    raios= {
+                        'objRect': pygame.Rect(jogador ['objRect'].centerx, jogador ['objRect'].top, LARGURA_RAIO, ALTURA_RAIO),
+                        'vel':VEL_RAIO,
+                        'imagem': imagemRaio
+                    }
+                    raios. append(raio)
+                    somTiro.play()
+                if evento.type == pygame.KEYUP:
+                    if evento.Key == pygame.K_LEFT or evento.Key == pygame.K_a:
+                        teclas['escape'] = False
+                    if evento.Key == pygame.K_RIGHT or evento.Key == pygame.K_d:
+                        teclas['direita'] = False
+                    if evento.Key == pygame.K_UP or evento.Key == pygame.K_w:
+                        teclas['cima'] = False
+                    if evento.Key == pygame.K_DOWN or evento.Key == pygame.K_s:
+                        teclas['baixo'] = False
+                
+                if evento.type == pygame.MOUSEMOTION:
+                    centroX_jogador = jogador['objRect'].centerx
+                    centroY_jogador = jogador['objRect'].centery
+                    jogador['objRect'].move_ip(evento.pos(0) - centroX_jogador, evento.pos[1] - centroY_jogador)
+
+                if evento.type == pygame.MOUSEBUTTONDOWN:
+                    raio = {
+                        'objRect': pygame.Rect(jogador ['objRect'].centerx, jogador ['objRect'].top, LARGURA_RAIO, ALTURA_RAIO),
+                        'vel':VEL_RAIO,
+                        'imagem': imagemRaio
+                    }
+                    raios.append(raio)
+                    somTiro.play()
+
+            
 
         janela.blit(imagemFundoRedim, (0, 0))
         colocarTexto(f'pontuação: {str(pontuacao)}', fonte, janela, 10, 0) 
