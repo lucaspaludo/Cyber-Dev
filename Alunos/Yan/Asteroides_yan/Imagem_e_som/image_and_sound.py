@@ -82,7 +82,7 @@ while deve_continuar :
                deve_continuar = False
             if evento.key == pygame.K_LEFT or evento.key == pygame.K_a:
                teclas['esquerda'] = True
-            if evento.key == pygame.K_RIGHT or evento.key == pygame.K_d:
+            if evento.key == pygame.K_RIGHT or evento.key == pygame.K_d :
                teclas['direita'] = True
             # if evento.key == pygame.K_UP or evento.key == pygame.K_w:
             #    teclas['cima'] = True

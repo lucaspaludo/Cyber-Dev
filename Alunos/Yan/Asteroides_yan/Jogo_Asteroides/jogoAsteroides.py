@@ -20,11 +20,25 @@ AN = imagemNave.get_height()
 LR = imagemlaser.get_width()
 AR = imagemlaser.get_height()
 
-def moverJogador():
-    pass
 
-def moverElemento():
-    pass
+def moverJogador():
+    borda_esquerda = 0
+    borda_superior = 0
+    borda_direita = borda_direita
+    borda_inferior = borda_inferior
+
+    if teclas['esquerda'] and jogador['objRect'].left > borda_esquerda:
+      jogador['objRect'].x -= jogador['vel']
+    if teclas['direita'] and jogador['objRect'].right < borda_direita:
+      jogador['objRect'].x += jogador['vel']
+    if teclas['cima'] and jogador['objRect'].top > borda_superior:
+      jogador['objRect'].y -= jogador['vel']
+    if teclas['baixo'] and jogador['objRect'].bottom < borda_inferior:
+      jogador['objRect'].y += jogador['vel']
+
+def moverElemento(elemento):
+    elemento['objRect'].y += jogador['vel'][1]
+    elemento['objRect'].x +=jogador['vel'][0]
 
 def terminar():
     pygame.quit()
@@ -68,9 +82,10 @@ colocarTexto('pressione uma tecla para começar', fonte, janela, LJ/20, AJ/2)
 pygame.display.update()
 agurdarEntrada()
 recorde = 0
+
 while True:
     asteroides = []
-    raio = []
+    raios = []
     pontuação = 0
     continuar = False
     teclas = {
@@ -92,6 +107,50 @@ while True:
         pontuação+=1
         if pontuação==recorde:
             somRecord.play()
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                terminar()
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:
+                    continuar = False
+                if evento.key == pygame.K_LEFT or evento.key == pygame.K_a:
+                    teclas['esquerda']=True
+                if evento.key == pygame.K_RIGHT or evento.key == pygame.K_d:
+                    teclas['direita']=True
+                if evento.key == pygame.K_RIGHT or evento.key == pygame.K_s:
+                    teclas['baixo']=True
+                if evento.key == pygame.K_RIGHT or evento.key == pygame.K_w:
+                    teclas['cima']=True
+            if evento.type == pygame.KEYUP:
+                if evento.key == pygame.K_LEFT or evento.key == pygame.K_d:
+                    teclas['esquerda']=False
+                if evento.key == pygame.K_LEFT or evento.key == pygame.K_a:
+                    teclas['direita']=False
+                if evento.key == pygame.K_LEFT or evento.key == pygame.K_w:
+                    teclas['cima']=False
+                if evento.key == pygame.K_LEFT or evento.key == pygame.K_s:
+                    teclas['baixo']=False
+                if evento.key == pygame.K_SPACE:
+                    raio = {
+                        'objRect':pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].top, LR, AR),
+                        'vel':VEL_LASER,
+                        'imagem': imagemlaser
+                        }
+                    raios.append(raio)
+                    somlaser.play()
+            if evento.type == pygame.MOUSEMOTION:
+                centrox_jogador = jogador['objRect'].centerx
+                centroy_jogador = jogador['objRect'].centery
+                jogador['objRect'].move_ip(evento.pos[0]- centrox_jogador, evento.pos[1]-centroy_jogador)
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                raio = {
+                    'objRect':pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].top, LR, AR),
+                    'vel':VEL_LASER,
+                    'imagem': imagemlaser
+                        }
+                raios.append(raio)
+                somlaser.play()
+
         janela.blit(imagemFundoRedim, (0, 0))
         colocarTexto(f'Pontuação:, {str[pontuação]}', fonte, janela,10, 0)
         colocarTexto(f'Recorde: {str[recorde]}', fonte, janela, 10, 40)
