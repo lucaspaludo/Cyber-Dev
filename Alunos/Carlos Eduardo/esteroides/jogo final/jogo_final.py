@@ -4,7 +4,6 @@ imagemNave = pygame.image.load('nave.png')
 imagemLaser = pygame.image.load('laser.png')
 imagemAsteroide = pygame.image.load('asteroide.png')
 imagemFundo = pygame.image.load('fundo.png')
-
 LARGURA_JANELA = 1000
 ALTURA_JANELA = 600
 COR_TEXTO = (255, 255, 255)
@@ -16,19 +15,30 @@ VEL_MAXIMA = 8
 VEL_JOGADOR = 5
 VEL_RAIO = (0, -20)
 ITERACOES = 20
-
 LARGURA_NAVE = imagemNave.get_width()
 ALTURA_NAVE = imagemNave.get_height()
-
 LARGURA_RAIO = imagemLaser.get_width()
 ALTURA_RAIO = imagemLaser.get_height()
 
-def moverJogador():
-    pass
+def moverJogador(jogador, tecla, dim_janela):
+     borda_esquerda = 0
+     borda_superior = 0 
+     borda_direita = dim_janela[0]
+     borda_inferior = dim_janela[1]
 
-def moverElemento():
-    pass
+     if teclas['esquerda'] and jogador['objRect'].left > borda_esquerda:
+          jogador['objRect'].x -= jogador['vel']
+     if teclas['direita'] and jogador['objRect'].right < borda_direita:
+          jogador['objRect'].x += jogador['vel']
+     if teclas['cima'] and jogador['objRect'].top > borda_superior:
+          jogador['objRect'].y -= jogador['vel']
+     if teclas['baixo'] and jogador['objRect'].bottom < borda_inferior:
+          jogador['objRect'].y += jogador['vel']
 
+def moverElemento(elemento):
+    elemento['objRect'].x += elemento['vel'][0]
+    elemento['objRect'].y += elemento['vel'][1]
+    
 def terminar():
     pygame.quit()
     exit()
@@ -49,8 +59,6 @@ def colocarTexto(texto, fonte, janela, x, y):
     rectTexto.topleft = (x, y)
     janela.blit(objTexto, rectTexto)
 
-
-
 pygame.init()
 relogio = pygame.time.Clock()
 janela = pygame.display.set_mode((LARGURA_JANELA, ALTURA_JANELA))
@@ -58,9 +66,7 @@ pygame.display.set_caption('asteroides')
 pygame.mouse.set_visible(False)
 
 imagemFundoRedim = pygame.transform.scale(imagemFundo, (LARGURA_JANELA, ALTURA_JANELA))
-
 Fonte = pygame.font.Font(None, 48)
-
 somFinal = pygame.mixer.Sound('game_over.mp3')
 somRecord = pygame.mixer.Sound('recorde.mp3')
 lazer = pygame.mixer.Sound('lazer.mp3')
@@ -74,7 +80,7 @@ aguardarEntrada()
 recorde = 0
 while True:
     asteroides = []
-    raio = []
+    raios = []
     pontuacao = 0 
     deve_continuar = False
     teclas = {
@@ -92,12 +98,54 @@ while True:
         'imagem': imagemNave,
         'vel':VEL_JOGADOR
     }
-
     while deve_continuar:
         pontuacao += 1 
         if pontuacao == recorde:
             somRecord.play()
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                terminar()
+            if evento. type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:
+                    deve_continuar = False
+                if evento.key == pygame.K_LEFT or evento.key == pygame.K_a:
+                    teclas['esquerda'] = True
+                if evento.key == pygame.K_RIGHT or evento.key == pygame.K_d:
+                    teclas['direita'] = True
+                if evento.key == pygame.K_UP or evento.key == pygame.K_w:
+                    teclas['cima'] = True
+                if evento.key == pygame.K_DOWN or evento.key == pygame.K_s:
+                    teclas['baixo'] = True
+                if evento.key == pygame.K_SPACE:
+                    raio = {
+                        'objRect': pygame.Rect(jogador['objRect'].centerx,jogador['objRect'].top, LARGURA_RAIO, ALTURA_RAIO),
+                        'vel':VEL_RAIO,
+                        'imagem': imagemLaser  
+                    }
+                    raios.append(raio)
+                    lazer.play()
+            if evento.type == pygame.KEYUP:
+                if evento.key == pygame.K_LEFT or evento.key == pygame.K_a:
+                    teclas['esquerda'] = False
+                if evento.key == pygame.K_RIGHT or evento.key == pygame.K_d:
+                    teclas['direita'] = False
+                if evento.key == pygame.K_UP or evento.key == pygame.K_w:
+                    teclas['cima'] = False
+                if evento.key == pygame.K_DOWN or evento.key == pygame.K_s:
+                    teclas['baixo'] = False
 
+            if evento.type == pygame.MOUSEMOTION:
+                centroX_jogador = jogador['objRect'].centerx
+                centroY_jogador = jogador['objRect'].centery
+                jogador[('objRect')].move.ip(evento.pos[0] - centroX_jogador, evento.pos[1] - centroY_jogador)
+
+            if evento.type == pygame.MOUSEBUTTONDOWN:
+                    raio = {
+                        'objRect': pygame.Rect(jogador['objRect'].centerx,jogador['objRect'].top, LARGURA_RAIO, ALTURA_RAIO),
+                        'vel':VEL_RAIO,
+                        'imagem': imagemLaser
+                }
+                    
         janela.blit(imagemFundoRedim, (0, 0))
         colocarTexto(f"Pontuacao: {str(pontuacao)}", Fonte, janela, 10, 0)
         colocarTexto(f"Recorde: {str(recorde)}", Fonte, janela, 10, 40)
