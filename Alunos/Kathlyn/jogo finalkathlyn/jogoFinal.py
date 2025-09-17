@@ -21,12 +21,24 @@ ALTURA_NAVE = imagemNave.get_height()
 LARGURE_RAIO = imagemRaio.get_width()
 ALTURA_RAIO = imagemRaio.get_height()
 
-def moverJogador():
-    pass
+def moverJogador(jogador, teclas, dim_janela):
+    borda_esquerda = 0
+    borda_superior = 0
+    borda_direita = dim_janela[0]
+    borda_inferior = dim_janela[1]
 
-def moverElemento():
-    pass
+    if teclas['esquerda'] and jogador['objRect'].left > borda_esquerda:
+        jogador['objRect'].x -= jogador['vel']
+    if teclas['direita'] and jogador['objRect'].right < borda_direita:
+        jogador['objRect'].x += jogador['vel']
+    if teclas['cima'] and jogador['objRect'].top > borda_superior:
+        jogador['objRect'].y -= jogador['vel']
+    if teclas['baixo'] and jogador['objRect'].bottom < borda_inferior:
+        jogador['objRect'].y += jogador['vel']
 
+def moverElemento(elemento):
+    elemento['objRect'].x += elemento['vel'][0]
+    elemento['objRect'].y += elemento['vel'][1]
 def terminar():
     pygame.quit()
     exit()
@@ -140,10 +152,6 @@ while True:
                 somTiro.play()
                 
                 
-
-
-
-
         janela.blit(imagemFundoRedim, (0,0))
         colocarTexto(f"Pontuação:{str(pontuacao)}", fonte, janela, 10, 0)
         colocarTexto(f"Recorde: {str(recorde)}", fonte, janela, 10, 40)
