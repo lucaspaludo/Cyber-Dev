@@ -18,7 +18,7 @@ ITERACOES = 20
 
 LARGURA_NAVE = imagemNave.get_width()
 ALTURA_NAVE = imagemNave.get_height()
-LARGURE_RAIO = imagemRaio.get_width()
+LARGURA_RAIO = imagemRaio.get_width()   
 ALTURA_RAIO = imagemRaio.get_height()
 
 def moverJogador(jogador, teclas, dim_janela):
@@ -42,7 +42,7 @@ def moverElemento(elemento):
 
 def terminar():
     pygame.quit()
-    exit()
+    exit()   
 
 def aguardarEntrada():
     while True:
@@ -53,6 +53,7 @@ def aguardarEntrada():
                 if evento.key == pygame.K_ESCAPE:
                     terminar()
                 return
+
 def colocarTexto(texto, fonte, janela, x, y):
     objTexto = fonte.render(texto, True, COR_TEXTO)
     rectTexto = objTexto.get_rect()
@@ -97,10 +98,10 @@ while True:
     posX = LARGURA_JANELA/2
     posY = ALTURA_JANELA - 50
     jogador = {
-        'objRect':pygame.Rect(posX, posY, LARGURA_NAVE, ALTURA_NAVE),
-        'imagem':imagemNave,
-        'Vel':VEL_JOGADOR
- }
+        'objRect': pygame.Rect(posX, posY, LARGURA_NAVE, ALTURA_NAVE),
+        'imagem': imagemNave,
+        'vel': VEL_JOGADOR   
+    }
     
     while deve_continuar:
         pontuacao += 1
@@ -116,13 +117,13 @@ while True:
                     teclas['esquerda'] = True
                 if evento.key == pygame.K_RIGHT or evento.key == pygame.K_d:
                     teclas['direita'] = True
-                if evento.key ==pygame.K_UP or evento.key == pygame.K_w:
+                if evento.key == pygame.K_UP or evento.key == pygame.K_w:
                     teclas['cima'] = True
                 if evento.key == pygame.K_DOWN or evento.key == pygame.K_s:
                     teclas['baixo'] = True
                 if evento.key == pygame.K_SPACE:
                     raio = {
-                        'objRect': pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].top, LARGURE_RAIO, ALTURA_RAIO),
+                        'objRect': pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].top, LARGURA_RAIO, ALTURA_RAIO), 
                         'vel': VEL_RAIO,
                         'imagem': imagemRaio                
                         }
@@ -133,7 +134,7 @@ while True:
                     teclas['esquerda'] = False
                 if evento.key == pygame.K_RIGHT or evento.key == pygame.K_d:
                     teclas['direita'] = False
-                if evento.key ==pygame.K_UP or evento.key == pygame.K_w:
+                if evento.key == pygame.K_UP or evento.key == pygame.K_w:
                     teclas['cima'] = False
                 if evento.key == pygame.K_DOWN or evento.key == pygame.K_s:
                     teclas['baixo'] = False
@@ -145,7 +146,7 @@ while True:
             
             if evento.type == pygame.MOUSEBUTTONDOWN:
                 raio = {
-                    'objRect': pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].top, LARGURE_RAIO, ALTURA_RAIO),
+                    'objRect': pygame.Rect(jogador['objRect'].centerx, jogador['objRect'].top, LARGURA_RAIO, ALTURA_RAIO),
                     'vel': VEL_RAIO,
                     'imagem': imagemRaio                
                  }
@@ -219,6 +220,3 @@ while True:
     pygame.display.update()
     aguardarEntrada()
     somFinal.stop()
-
-    
-
